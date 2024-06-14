@@ -17,9 +17,11 @@ interface Options {
 
 export async function main(options: Options): Promise<void> {
   const data = await jsr(options);
-  await Deno.writeTextFile("jsr.json", JSON.stringify(data, null, 2));
+  const [file, config] = getConfig();
+  Object.assign(config, data);
+  await Deno.writeTextFile(file, JSON.stringify(config, null, 2));
 
-  console.log("Generated jsr.json");
+  console.log(`Updated ${file}`);
 }
 
 export async function jsr(options: Options): Promise<JSR> {
@@ -122,4 +124,20 @@ if (import.meta.main) {
     version: args.version,
     exports: args.exports,
   });
+}
+
+// deno-lint-ignore no-explicit-any
+function getConfig(): [string, Record<string, any>] {
+  const files = ["deno.json", "deno.jsonc", "jsr.json", "jsr.jsonc"];
+
+  for (const file of files) {
+    try {
+      const content = Deno.readTextFileSync(file);
+      return [file, JSON.parse(content)];
+    } catch {
+      // Ignore
+    }
+  }
+
+  return ["jsr.json", {}];
 }
