@@ -125,3 +125,9 @@ import one from "jsr:@my/package/src/one.js";
 import one from "./vendor/my/package/src/one.js";
 import one from "https://deno.land/x/my_package/src/one.js";
 ```
+
+## Example
+
+- [@vento/vento](https://jsr.io/@vento/vento): See
+  [GitHub workflow](https://github.com/ventojs/vento/blob/main/.github/workflows/jsr.yml)
+  to publish to JSR.
