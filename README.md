@@ -69,6 +69,9 @@ This has several issues:
   > in relative and absolute import specifiers.
 - It overlaps the import maps standard. For example, in Deno it's really painful
   [to combine JSR and import maps](https://github.com/denoland/deno/issues/23504#issuecomment-2073644331).
+- For large projects, is hard to maintain the list of exports, specially if you
+  want to let import all or almost all files. It's common to forget to add a new
+  module to the `exports` list.
 
 ### How to fix this?
 
@@ -77,7 +80,7 @@ HTTP and file system imports:
 
 - Scans your code searching for files with the extensions `.ts`, `.js`, `.tsx`,
   `.jsx` and `.mjs`.
-- Files meeting any of the following conditions are ignored:
+- Files that meet any of the following conditions are ignored:
   - It's in the directory `/test/`, `/docs/`, `/deps/` or `/node_modules/`.
   - The name starts with `.` or `_` or is in a directory starting with `.` or
     `_`.
