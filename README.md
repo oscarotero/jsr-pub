@@ -97,15 +97,14 @@ For example, the following project:
 ├── docs/
 |   ├── one.js
 |   └── two.ts
-├── src/
-|   ├── one.js
-|   ├── one.bench.js
-|   ├── two.ts
-|   └── two.bench.ts
 ├── test/
 |   ├── one.js
 |   └── two.ts
-└── mod.ts
+├── mod.ts
+├── one.js
+├── one.bench.js
+├── two.ts
+└── two.bench.ts
 ```
 
 Generate the following exports:
@@ -114,8 +113,8 @@ Generate the following exports:
 {
   "exports": {
     ".": "./mod.ts",
-    "./src/one.js": "./src/one.js",
-    "./src/two.ts": "./src/two.ts"
+    "./one.js": "./one.js",
+    "./two.ts": "./two.ts"
   }
 }
 ```
@@ -127,7 +126,7 @@ to switch to local imports or http imports easily at any time. For example, the
 following import:
 
 ```js
-import hello from "my_package/hello.js";
+import one from "my_package/one.js";
 ```
 
 Is compatible with any origin type, by editing the import map:
