@@ -1,7 +1,7 @@
 # jsr-pub
 
 Utility to update the `deno.json` file with the fields required to publish to
-[JSR](https://jsr.io/).
+[JSR](https://jsr.io/). Useful specially to generate `exports` and `version` fields automatically.
 
 ## Usage
 
@@ -32,6 +32,7 @@ is used to provide extensionless specifiers. For example:
   "name": "@my/package",
   "version": "1.0.0",
   "exports": {
+    ".": "./main.ts",
     "./first-module": "./first_module.ts",
     "./second-module": "./second_module.ts"
   }
@@ -48,12 +49,13 @@ This has several issues:
 - The package is not longer compatible with the file system. For example, you
   cannot use a local version of this package for debuging purposes, because the
   paths of the modules are different.
-- You don't know the format of the file you're really importing. This is
+- You don't know the real format of the file you're importing. This is
   specially critical for the
   [new import attributes](https://github.com/tc39/proposal-import-attributes)
   standard that allows to import different types of modules like JSON, CSS etc.
 - This is not compatible with web standards and makes more difficult to switch
-  to HTTP imports in the future.
+  to HTTP imports in the future. It makes harder to create modules that work on
+  Deno and browsers.
 - It's an antipattern that even Node (which originally started this trend)
   [now recommends to avoid](https://nodejs.org/api/packages.html#extensions-in-subpaths):
 
@@ -121,12 +123,23 @@ Generate the following exports:
 The `mod.*` file is automatically detected as the main module.
 
 Now the specifiers in JSR are compatible with the filesystem, so it's possible
-to switch to local imports or http imports easily at any time:
+to switch to local imports or http imports easily at any time. For example, the
+following import:
 
+```js
+import hello from "my_package/hello.js";
 ```
-import one from "jsr:@my/package/src/one.js";
-import one from "./vendor/my/package/src/one.js";
-import one from "https://deno.land/x/my_package/src/one.js";
+
+Is compatible with any origin type, by editing the import map:
+
+```jsonc
+{
+  imports: {
+    "my_package/": "jsr:@my/package/", // to use JSR
+    "my_package/": "./vendor/my/package/", // to use local file system
+    "my_package/": "https://deno.land/x/my_package/", // to use HTTP imports
+  }
+}
 ```
 
 ## Example
