@@ -1,6 +1,6 @@
 import { expandGlob } from "jsr:@std/fs@0.229.3/expand-glob";
-import { join } from "jsr:@std/path@0.225.2/join";
-import { parseArgs } from "jsr:@std/cli@0.224.6/parse-args";
+import { join } from "jsr:@std/path@1.0.0/join";
+import { parseArgs } from "jsr:@std/cli@0.224.7/parse-args";
 
 interface JSR {
   name: string;
@@ -49,7 +49,7 @@ async function getVersion(version?: string): Promise<string> {
 }
 
 async function getExports(paths: string[]): Promise<Record<string, string>> {
-  const exports: Record<string, string> = {};
+  const exports: [string, string][] = [];
   const root = Deno.cwd();
 
   for (const path of paths) {
@@ -60,16 +60,18 @@ async function getExports(paths: string[]): Promise<Record<string, string>> {
       const name = "." + join("/", entry.path.slice(root.length));
 
       if (!mustBeIgnored(name)) {
+        exports.push([name, name]);
+
         if (name.match(/^\.\/mod\.\w+$/)) {
-          exports["."] = name;
-        } else {
-          exports[name] = name;
+          exports.push([".", name]);
         }
       }
     }
   }
 
-  return exports;
+  exports.sort(([a], [b]) => a.localeCompare(b));
+
+  return Object.fromEntries(exports);
 }
 
 function mustBeIgnored(path: string): boolean {

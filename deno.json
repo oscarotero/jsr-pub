@@ -1,7 +1,7 @@
 {
   "lock": false,
   "tasks": {
-    "update-deps": "deno run -A 'https://deno.land/x/nudd@v0.2.4/cli.ts' update *.ts deno.json"
+    "update-deps": "deno run -A 'https://deno.land/x/nudd@v0.2.6/cli.ts' update *.ts deno.json"
   },
   "exclude": [
     "CHANGELOG.md"
